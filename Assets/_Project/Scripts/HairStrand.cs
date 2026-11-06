@@ -17,9 +17,9 @@ public class HairStrand : MonoBehaviour
         currentLength = initialLength;
     }
 
-    public void Shave(float amount)
+    public bool Shave(float amount)
     {
-        if (currentLength <= minLength) return;
+        if (currentLength <= minLength || amount <= 0f) return false;
 
         currentLength -= amount;
 
@@ -27,6 +27,7 @@ public class HairStrand : MonoBehaviour
         {
             currentLength = 0f;
             gameObject.SetActive(false);
+            return true;
         }
         else
         {
@@ -34,10 +35,12 @@ public class HairStrand : MonoBehaviour
             float newScaleY = originalScale.y * ratio;
             transform.localScale = new Vector3(originalScale.x, newScaleY, originalScale.z);
 
-            // Menjaga pangkal rambut tetap menempel di permukaan saat memendek
+            // Keep the base of the strand attached to the surface as it shrinks.
             float yOffset = (originalScale.y - newScaleY);
             transform.localPosition = originalLocalPos - new Vector3(0f, yOffset, 0f);
         }
+
+        return false;
     }
 
     public bool IsShaved()
