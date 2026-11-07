@@ -4,10 +4,10 @@ public class BasicShavingTool : MonoBehaviour
 {
     [Header("Raycast Settings")]
     [SerializeField] private Camera playerCamera;
-    [SerializeField] private float shaveRange = 5.0f;       // Jarak jangkauan alat cukur
-    [SerializeField] private float toolHeadRadius = 0.35f;  // Ukuran kepala alat cukur (SphereCast)
-    [SerializeField] private float shaveRadius = 0.6f;      // Radius pemotongan bulu di sekitar titik kontak
-    [SerializeField] private float shaveSpeed = 1.2f;       // Kecepatan mencukur
+    [SerializeField] private float shaveRange = 5.0f;       // Maximum distance of the shaving tool.
+    [SerializeField] private float toolHeadRadius = 0.35f;  // Radius of the shaving tool head for sphere casts.
+    [SerializeField] private float shaveRadius = 0.6f;      // Radius shaved around the contact point.
+    [SerializeField] private float shaveSpeed = 1.2f;       // Speed at which hair is shaved.
     [SerializeField] private LayerMask shavableLayer = ~0;
 
     [Header("Crosshair UI")]
@@ -21,12 +21,19 @@ public class BasicShavingTool : MonoBehaviour
     [SerializeField] private Color ringIdleColor = Color.white;
     [SerializeField] private Color ringCuttingColor = new Color(0.4f, 1f, 0.5f, 1f);
 
+    private HairInventoryManager hairInventory;
+    private bool missingInventoryLogged;
+    private string harvestFeedback;
+    private float harvestFeedbackExpiryTime;
+
     private void Start()
     {
         if (playerCamera == null)
         {
             playerCamera = Camera.main;
         }
+
+        FindHairInventory();
 
         SetupVisualRing();
     }
@@ -35,7 +42,7 @@ public class BasicShavingTool : MonoBehaviour
     {
         if (visualRing == null)
         {
-            // Buat child GameObject otomatis jika belum dipasang di Inspector
+            // Create a child GameObject automatically when none is assigned in the Inspector.
             GameObject ringObj = new GameObject("CuttingVisualRing");
             ringObj.transform.SetParent(transform);
             visualRing = ringObj.AddComponent<LineRenderer>();
@@ -50,7 +57,7 @@ public class BasicShavingTool : MonoBehaviour
         visualRing.receiveShadows = false;
         visualRing.alignment = LineAlignment.View;
 
-        // Pasang material HDRP Unlit jika tersedia
+        // Use an HDRP Unlit material when one is available.
         if (visualRing.sharedMaterial == null || visualRing.sharedMaterial.name == "Default-Line")
         {
             Material mat = Resources.Load<Material>("CuttingRingMat");
@@ -108,7 +115,7 @@ public class BasicShavingTool : MonoBehaviour
         {
             visualRing.enabled = true;
 
-            // Atur warna ring (putih saat mengarah, hijau saat mencukur)
+            // Show white while aiming and green while shaving.
             Color activeColor = isCutting ? ringCuttingColor : ringIdleColor;
             visualRing.startColor = activeColor;
             visualRing.endColor = activeColor;
@@ -117,17 +124,17 @@ public class BasicShavingTool : MonoBehaviour
         }
         else
         {
-            // Sembunyikan ring jika di luar jangkauan atau tidak membidik permukaan
+            // Hide the ring when no surface is within range.
             visualRing.enabled = false;
         }
     }
 
     private void DrawCircleOnSurface(Vector3 center, Vector3 normal, float radius)
     {
-        // Beri sedikit offset di sepanjang normal agar tidak z-fighting dengan permukaan
+        // Offset the ring slightly along the surface normal to avoid z-fighting.
         Vector3 surfaceCenter = center + normal * 0.008f;
 
-        // Hitung vektor basis ortogonal pada bidang permukaan (tangent & bitangent)
+        // Calculate an orthogonal tangent and bitangent on the surface plane.
         Vector3 helper = Mathf.Abs(normal.y) > 0.99f ? Vector3.forward : Vector3.up;
         Vector3 tangent = Vector3.Cross(normal, helper).normalized;
         Vector3 bitangent = Vector3.Cross(normal, tangent).normalized;
@@ -164,18 +171,57 @@ public class BasicShavingTool : MonoBehaviour
 
         if (hasHit)
         {
-            HairStrand strand = hit.collider.GetComponent<HairStrand>();
-            if (strand != null)
-            {
-                strand.Shave(shaveSpeed * Time.deltaTime);
-            }
-
             HairPatch patch = hit.collider.GetComponentInParent<HairPatch>();
             if (patch != null)
             {
-                patch.ShaveNearPoint(hit.point, shaveRadius, shaveSpeed * Time.deltaTime);
+                AddHarvestedHair(patch.ShaveNearPoint(hit.point, shaveRadius, shaveSpeed * Time.deltaTime));
+            }
+            else
+            {
+                HairStrand strand = hit.collider.GetComponent<HairStrand>();
+                if (strand != null && strand.Shave(shaveSpeed * Time.deltaTime))
+                {
+                    AddHarvestedHair(1);
+                }
             }
         }
+    }
+
+    private void FindHairInventory()
+    {
+        if (hairInventory == null)
+        {
+            hairInventory = FindFirstObjectByType<HairInventoryManager>();
+        }
+    }
+
+    private void AddHarvestedHair(int amount)
+    {
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        FindHairInventory();
+        if (hairInventory == null)
+        {
+            if (!missingInventoryLogged)
+            {
+                Debug.LogError("Cannot collect harvested hair because no HairInventoryManager exists in the scene.", this);
+                missingInventoryLogged = true;
+            }
+
+            return;
+        }
+
+        if (!hairInventory.AddHair(amount))
+        {
+            Debug.LogWarning("Could not add harvested hair to the inventory.", this);
+            return;
+        }
+
+        harvestFeedback = amount == 1 ? "+1 Hair" : $"+{amount} Hair";
+        harvestFeedbackExpiryTime = Time.unscaledTime + 1.5f;
     }
 
     private void OnGUI()
@@ -190,5 +236,18 @@ public class BasicShavingTool : MonoBehaviour
         GUI.color = crosshairColor;
         GUI.Box(new Rect(x, y, dotSize, dotSize), GUIContent.none);
         GUI.color = prevColor;
+
+        if (!string.IsNullOrEmpty(harvestFeedback) && Time.unscaledTime < harvestFeedbackExpiryTime)
+        {
+            GUIStyle feedbackStyle = new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 24,
+                fontStyle = FontStyle.Bold,
+                normal = { textColor = Color.white }
+            };
+
+            GUI.Label(new Rect((Screen.width - 220f) * 0.5f, y + 24f, 220f, 36f), harvestFeedback, feedbackStyle);
+        }
     }
 }

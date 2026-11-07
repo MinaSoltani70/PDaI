@@ -14,15 +14,16 @@ public class HairPatch : MonoBehaviour
         hairStrands = GetComponentsInChildren<HairStrand>(true);
     }
 
-    // Mencukur helai rambut terdekat dengan titik kontak alat cukur
-    public void ShaveNearPoint(Vector3 hitPoint, float radius, float cutAmount)
+    public int ShaveNearPoint(Vector3 hitPoint, float radius, float cutAmount)
     {
         if (hairStrands == null || hairStrands.Length == 0)
         {
             CacheStrands();
         }
 
-        if (hairStrands == null) return;
+        if (hairStrands == null) return 0;
+
+        int harvestedUnits = 0;
 
         foreach (var strand in hairStrands)
         {
@@ -31,9 +32,14 @@ public class HairPatch : MonoBehaviour
                 float dist = Vector3.Distance(strand.transform.position, hitPoint);
                 if (dist <= radius)
                 {
-                    strand.Shave(cutAmount);
+                    if (strand.Shave(cutAmount))
+                    {
+                        harvestedUnits++;
+                    }
                 }
             }
         }
+
+        return harvestedUnits;
     }
 }

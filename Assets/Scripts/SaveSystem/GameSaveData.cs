@@ -11,4 +11,5 @@ public sealed class GameSaveData
 
     public int saveVersion = CurrentVersion;
     public int coins;
+    public int hairUnits;
 }

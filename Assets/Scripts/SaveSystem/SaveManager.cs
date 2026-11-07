@@ -16,6 +16,9 @@ public sealed class SaveManager : MonoBehaviour
     private static readonly Regex CoinsFieldPattern = new Regex(
         "\"coins\"\\s*:\\s*(-?\\d+)",
         RegexOptions.CultureInvariant);
+    private static readonly Regex HairUnitsFieldPattern = new Regex(
+        "\"hairUnits\"\\s*:\\s*(-?\\d+)",
+        RegexOptions.CultureInvariant);
     private static readonly Regex VersionFieldPattern = new Regex(
         "\"saveVersion\"\\s*:\\s*(\\d+)",
         RegexOptions.CultureInvariant);
@@ -113,6 +116,17 @@ public sealed class SaveManager : MonoBehaviour
             if (data == null || data.coins != parsedCoins)
             {
                 throw new InvalidDataException("The game save data is invalid.");
+            }
+
+            Match hairUnitsMatch = HairUnitsFieldPattern.Match(json);
+            if (!hairUnitsMatch.Success)
+            {
+                data.hairUnits = 0;
+            }
+            else if (!int.TryParse(hairUnitsMatch.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsedHairUnits) ||
+                     parsedHairUnits < 0 || data.hairUnits != parsedHairUnits)
+            {
+                throw new InvalidDataException("The JSON save does not contain a valid hair inventory.");
             }
 
             Match versionMatch = VersionFieldPattern.Match(json);
