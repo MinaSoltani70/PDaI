@@ -2002,6 +2002,7 @@ GameObject:
   - component: {fileID: 1834858722}
   - component: {fileID: 1834858723}
   - component: {fileID: 1834858724}
+  - component: {fileID: 1834858725}
   m_Layer: 0
   m_Name: -----------MANAGERS-----------
   m_TagString: Untagged
@@ -2060,6 +2061,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c41b5f252a44d37913046ef5dc441ac, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::HairInventoryManager
+--- !u!114 &1834858725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1834858720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1c53fa1c3640d19aa741ba8bf5d1a2, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ToolEquipmentManager
+  starterScissor: {fileID: 11400000, guid: 6b1c53fa1c3640d19aa741ba8bf5d1b1, type: 2}
+  scissorCatalog:
+  - {fileID: 11400000, guid: 6b1c53fa1c3640d19aa741ba8bf5d1b1, type: 2}
+  - {fileID: 11400000, guid: 6b1c53fa1c3640d19aa741ba8bf5d1b2, type: 2}
+  shavingTool: {fileID: 1304876346}
 --- !u!1 &777000000000000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -2130,6 +2148,89 @@ MonoBehaviour:
   interactionKey: 101
   interactionZoneSize: {x: 5, y: 3, z: 5}
   feedbackDuration: 3
+--- !u!1 &777000000000000011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 777000000000000012}
+  - component: {fileID: 777000000000000013}
+  - component: {fileID: 777000000000000014}
+  - component: {fileID: 777000000000000015}
+  m_Layer: 0
+  m_Name: Scissor Upgrade Shop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &777000000000000012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777000000000000011}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -11.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!65 &777000000000000013
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777000000000000011}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4, y: 3, z: 4}
+  m_Center: {x: 0, y: 1.5, z: 0}
+--- !u!114 &777000000000000014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1c53fa1c3640d19aa741ba8bf5d1a4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeShopStation
+  interactionKey: 101
+  interactionZoneSize: {x: 4, y: 3, z: 4}
+  shopInterface: {fileID: 777000000000000015}
+--- !u!114 &777000000000000015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1c53fa1c3640d19aa741ba8bf5d1a3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeShopInterface
+  equipmentManager: {fileID: 1834858725}
 --- !u!1 &1898772527
 GameObject:
   m_ObjectHideFlags: 1
