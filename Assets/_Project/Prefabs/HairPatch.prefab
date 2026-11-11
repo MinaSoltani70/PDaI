@@ -130,6 +130,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &1523677451480116421
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +263,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &2074258462950439642
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,6 +396,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &3001847941226885395
 GameObject:
   m_ObjectHideFlags: 0
@@ -520,6 +529,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &3324933149830453640
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,6 +662,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &3371107642572929141
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,6 +795,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &4156389894617423857
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,6 +928,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &4160104585924877699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1040,6 +1061,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &4173710031694424509
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,6 +1194,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &4551583788263222058
 GameObject:
   m_ObjectHideFlags: 0
@@ -1364,6 +1391,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &4802756897617303659
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,6 +1524,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &5882176407387645301
 GameObject:
   m_ObjectHideFlags: 0
@@ -1624,6 +1657,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &6832026117675043285
 GameObject:
   m_ObjectHideFlags: 0
@@ -1754,6 +1790,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &7336924468552961288
 GameObject:
   m_ObjectHideFlags: 0
@@ -1884,6 +1923,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &7545267150964025470
 GameObject:
   m_ObjectHideFlags: 0
@@ -2014,6 +2056,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &7565068151079201075
 GameObject:
   m_ObjectHideFlags: 0
@@ -2144,6 +2189,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &8330527331146455949
 GameObject:
   m_ObjectHideFlags: 0
@@ -2274,6 +2322,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &8980324079415622248
 GameObject:
   m_ObjectHideFlags: 0
@@ -2404,6 +2455,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &9024113441446127988
 GameObject:
   m_ObjectHideFlags: 0
@@ -2534,6 +2588,9 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
 --- !u!1 &9057572296745156080
 GameObject:
   m_ObjectHideFlags: 0
@@ -2664,3 +2721,6 @@ MonoBehaviour:
   initialLength: 1
   currentLength: 1
   minLength: 0.05
+  canRegrow: 1
+  regrowthDelay: 10
+  regrowthSpeed: 0.15
