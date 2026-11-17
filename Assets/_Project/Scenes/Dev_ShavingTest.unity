@@ -2034,8 +2034,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08fa251bcc2a4b4ea6a94260452b7b67, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1834858723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2046,8 +2046,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 729984b307b446dd8ff8a468df316f41, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1834858724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2058,78 +2058,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c41b5f252a44d37913046ef5dc441ac, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HairInventoryManager
---- !u!1 &777000000000000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 777000000000000002}
-  - component: {fileID: 777000000000000003}
-  - component: {fileID: 777000000000000004}
-  m_Layer: 0
-  m_Name: Hair Selling Station
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &777000000000000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 777000000000000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -6, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!65 &777000000000000003
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 777000000000000001}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3, y: 2.5, z: 3}
-  m_Center: {x: 0, y: 1.25, z: 0}
---- !u!114 &777000000000000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 777000000000000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6f607a639e45a99ed1cc42d39d6a82, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::HairSellingStation
-  coinsPerHairUnit: 1
-  interactionKey: 101
-  interactionZoneSize: {x: 5, y: 3, z: 5}
-  feedbackDuration: 3
 --- !u!1 &1898772527
 GameObject:
   m_ObjectHideFlags: 1
@@ -2441,6 +2371,76 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &777000000000000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 777000000000000002}
+  - component: {fileID: 777000000000000003}
+  - component: {fileID: 777000000000000004}
+  m_Layer: 0
+  m_Name: Hair Selling Station
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &777000000000000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777000000000000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -6, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!65 &777000000000000003
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777000000000000001}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 2.5, z: 3}
+  m_Center: {x: 0, y: 1.25, z: 0}
+--- !u!114 &777000000000000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6f607a639e45a99ed1cc42d39d6a82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HairSellingStation
+  coinsPerHairUnit: 1
+  interactionKey: 101
+  interactionZoneSize: {x: 5, y: 3, z: 5}
+  feedbackDuration: 3
 --- !u!114 &1322753381178780604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2533,15 +2533,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8434334059883130217, guid: dde0a6045823e9c4399686104817c39f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.2903934
+      value: 7.274
       objectReference: {fileID: 0}
     - target: {fileID: 8434334059883130217, guid: dde0a6045823e9c4399686104817c39f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.3512073
+      value: 2.426
       objectReference: {fileID: 0}
     - target: {fileID: 8434334059883130217, guid: dde0a6045823e9c4399686104817c39f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.07936607
+      value: -0.077
       objectReference: {fileID: 0}
     - target: {fileID: 8434334059883130217, guid: dde0a6045823e9c4399686104817c39f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2637,6 +2637,103 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1001 &4534952541768312408
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3598607008245938995, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_Name
+      value: HUD_Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146138436396925887, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1efe115021ba6044884769da52a7cd7e, type: 3}
 --- !u!114 &5148107579914090877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3369,3 +3466,5 @@ SceneRoots:
   - {fileID: 1086837689}
   - {fileID: 2077898588}
   - {fileID: 2636898604500551436}
+  - {fileID: 777000000000000002}
+  - {fileID: 4534952541768312408}
