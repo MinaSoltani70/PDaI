@@ -152,7 +152,7 @@ public class BasicShavingTool : MonoBehaviour
         }
     }
 
-    private void PerformShave()
+        private void PerformShave()
     {
         if (playerCamera == null)
         {
@@ -163,26 +163,30 @@ public class BasicShavingTool : MonoBehaviour
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         RaycastHit hit;
 
-        bool hasHit = Physics.SphereCast(ray, toolHeadRadius, out hit, shaveRange, shavableLayer);
-        if (!hasHit)
+        // Tembak Raycast tepat di titik tengah pandangan (sama persis dengan posisi Visual Ring)
+        if (Physics.Raycast(ray, out hit, shaveRange, shavableLayer))
         {
-            hasHit = Physics.Raycast(ray, out hit, shaveRange, shavableLayer);
-        }
+            // Ambil semua collider yang berada tepat di dalam lingkaran Visual Ring (shaveRadius)
+            Collider[] collidersInRange = Physics.OverlapSphere(hit.point, shaveRadius, shavableLayer);
+            int totalHarvested = 0;
 
-        if (hasHit)
-        {
-            HairPatch patch = hit.collider.GetComponentInParent<HairPatch>();
-            if (patch != null)
+            foreach (var col in collidersInRange)
             {
-                AddHarvestedHair(patch.ShaveNearPoint(hit.point, shaveRadius, shaveSpeed * Time.deltaTime));
-            }
-            else
-            {
-                HairStrand strand = hit.collider.GetComponent<HairStrand>();
-                if (strand != null && strand.Shave(shaveSpeed * Time.deltaTime))
+                HairStrand strand = col.GetComponent<HairStrand>();
+                if (strand != null && !strand.IsShaved())
                 {
-                    AddHarvestedHair(1);
+                    // Cukur bulu di dalam area
+                    if (strand.Shave(shaveSpeed * Time.deltaTime))
+                    {
+                        totalHarvested++;
+                    }
                 }
+            }
+
+            // Jika ada bulu yang putus/habis tercukur, tambahkan ke inventori
+            if (totalHarvested > 0)
+            {
+                AddHarvestedHair(totalHarvested);
             }
         }
     }
