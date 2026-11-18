@@ -257,9 +257,20 @@ public sealed class UpgradeShopInterface : MonoBehaviour
         CreateImage("Card Background", card, new Color(1f, 0.98f, 0.92f, 1f), Vector2.zero, Vector2.one,
             Vector2.zero, Vector2.zero);
 
-        CreateText("Item Name", card, scissor.DisplayName, 38, FontStyle.Bold, TealColor,
-            new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(18f, -58f),
-            new Vector2(-36f, 76f), TextAnchor.MiddleCenter);
+        CreateImage("Item Header", card, TealColor,
+            new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -36f),
+            new Vector2(0f, 72f));
+
+        Image itemImage = CreateImage("Item Image", card, Color.white,
+            new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -180f),
+            new Vector2(170f, 160f));
+        itemImage.sprite = scissor.Icon;
+        itemImage.preserveAspect = true;
+        itemImage.raycastTarget = false;
+
+        CreateText("Item Name", card, scissor.DisplayName, 34, FontStyle.Bold, Color.white,
+            new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(18f, -36f),
+            new Vector2(-36f, 60f), TextAnchor.MiddleCenter);
 
         ScissorDefinition starter = equipmentManager.StarterScissor != null
             ? equipmentManager.StarterScissor
@@ -271,8 +282,8 @@ public sealed class UpgradeShopInterface : MonoBehaviour
                        $"Cutting area: {areaChange:+0;-0;0}%\n" +
                        $"Range: {scissor.ShaveRange:0.0}";
         CreateText("Scissor Stats", card, stats, 30, FontStyle.Normal, TealColor,
-            new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(32f, -180f),
-            new Vector2(-64f, 190f), TextAnchor.MiddleLeft);
+            new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(32f, -320f),
+            new Vector2(-64f, 100f), TextAnchor.MiddleLeft);
 
         bool owned = equipmentManager.IsOwned(scissor);
         bool equipped = equipmentManager.EquippedScissor == scissor;
@@ -287,8 +298,8 @@ public sealed class UpgradeShopInterface : MonoBehaviour
 
         Color buttonColor = equipped ? GoldColor : CoralColor;
         Button actionButton = CreateButton("Scissor Action", card, actionLabel, 28, buttonColor,
-            new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 66f),
-            new Vector2(width - 64f, 84f), () => PurchaseOrEquip(scissor));
+            new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 46f),
+            new Vector2(width - 64f, 64f), () => PurchaseOrEquip(scissor));
         actionButton.interactable = !equipped && (owned || canAfford);
     }
 

@@ -5,6 +5,7 @@ public sealed class ScissorDefinition : ScriptableObject
 {
     [SerializeField] private string id;
     [SerializeField] private string displayName;
+    [SerializeField] private Sprite icon;
     [SerializeField, Min(0)] private int price;
     [SerializeField, Min(0.1f)] private float shaveRange = 3.5f;
     [SerializeField, Min(0f)] private float toolHeadRadius = 0.35f;
@@ -13,6 +14,7 @@ public sealed class ScissorDefinition : ScriptableObject
 
     public string Id => id;
     public string DisplayName => displayName;
+    public Sprite Icon => icon;
     public int Price => price;
     public float ShaveRange => shaveRange;
     public float ToolHeadRadius => toolHeadRadius;
