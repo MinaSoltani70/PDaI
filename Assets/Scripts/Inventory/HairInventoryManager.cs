@@ -9,6 +9,11 @@ public sealed class HairInventoryManager : MonoBehaviour
     public event Action<int> HairUnitsChanged;
 
     public int HairUnits { get; private set; }
+    [SerializeField, Min(1)] private int capacity = 100;
+    public int Capacity => capacity;
+    public int RemainingCapacity => Mathf.Max(0, capacity - HairUnits);
+    public bool IsFull => HairUnits >= capacity;
+
 
     private SaveManager saveManager;
 
@@ -30,7 +35,7 @@ public sealed class HairInventoryManager : MonoBehaviour
     /// </summary>
     public bool AddHair(int amount)
     {
-        if (amount <= 0 || amount > int.MaxValue - HairUnits)
+        if (amount <= 0 || amount > RemainingCapacity)
         {
             return false;
         }
