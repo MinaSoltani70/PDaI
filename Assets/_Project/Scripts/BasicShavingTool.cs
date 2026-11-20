@@ -84,12 +84,12 @@ public class BasicShavingTool : MonoBehaviour
     {
         bool isClicking = false;
 
-        #if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM
         if (UnityEngine.InputSystem.Mouse.current != null && UnityEngine.InputSystem.Mouse.current.leftButton.isPressed)
         {
             isClicking = true;
         }
-        #endif
+#endif
 
         if (Input.GetMouseButton(0))
         {
@@ -152,8 +152,21 @@ public class BasicShavingTool : MonoBehaviour
         }
     }
 
-        private void PerformShave()
+    private void PerformShave()
     {
+        FindHairInventory();
+
+        if (hairInventory == null)
+        {
+            return;
+        }
+
+        if (hairInventory.IsFull)
+        {
+            harvestFeedback = "Inventory full!";
+            harvestFeedbackExpiryTime = Time.unscaledTime + 1.5f;
+            return;
+        }
         if (playerCamera == null)
         {
             playerCamera = Camera.main;
@@ -170,12 +183,20 @@ public class BasicShavingTool : MonoBehaviour
             Collider[] collidersInRange = Physics.OverlapSphere(hit.point, shaveRadius, shavableLayer);
             int totalHarvested = 0;
 
+
             foreach (var col in collidersInRange)
             {
+                // Stop shaving when there is no inventory space left.
+                if (totalHarvested >= hairInventory.RemainingCapacity)
+                {
+                    break;
+                }
+
                 HairStrand strand = col.GetComponent<HairStrand>();
+
                 if (strand != null && !strand.IsShaved())
                 {
-                    // Cukur bulu di dalam area
+                    // Shave the hair within the cutting area.
                     if (strand.Shave(shaveSpeed * Time.deltaTime))
                     {
                         totalHarvested++;
@@ -183,11 +204,12 @@ public class BasicShavingTool : MonoBehaviour
                 }
             }
 
-            // Jika ada bulu yang putus/habis tercukur, tambahkan ke inventori
+            // Add fully harvested strands to the inventory.
             if (totalHarvested > 0)
             {
                 AddHarvestedHair(totalHarvested);
             }
+
         }
     }
 

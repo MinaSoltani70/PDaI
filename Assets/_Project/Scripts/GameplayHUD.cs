@@ -55,7 +55,7 @@ public class GameplayHUD : MonoBehaviour
     {
         if (hairText != null)
         {
-            hairText.text = hairPrefix + currentHair;
+            hairText.text = $"{hairPrefix}{currentHair} / {hairInventory.Capacity}";
         }
     }
 
