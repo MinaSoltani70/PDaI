@@ -26,6 +26,14 @@ public class BasicShavingTool : MonoBehaviour
     private string harvestFeedback;
     private float harvestFeedbackExpiryTime;
 
+    public void ApplyScissorStats(float range, float headRadius, float cuttingRadius, float speed)
+    {
+        shaveRange = Mathf.Max(0.1f, range);
+        toolHeadRadius = Mathf.Max(0f, headRadius);
+        shaveRadius = Mathf.Max(0.01f, cuttingRadius);
+        shaveSpeed = Mathf.Max(0.01f, speed);
+    }
+
     private void Start()
     {
         if (playerCamera == null)
