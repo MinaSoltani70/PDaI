@@ -27,6 +27,10 @@ public class BasicShavingTool : MonoBehaviour
     private string harvestFeedback;
     private float harvestFeedbackExpiryTime;
 
+    public float ShaveRadius { get => shaveRadius; set => shaveRadius = Mathf.Max(0.01f, value); }
+    public float ShaveSpeed { get => shaveSpeed; set => shaveSpeed = Mathf.Max(0f, value); }
+    public float ShaveRange { get => shaveRange; set => shaveRange = Mathf.Max(0.1f, value); }
+
     private void Start()
     {
         if (playerCamera == null) playerCamera = Camera.main;
@@ -37,6 +41,11 @@ public class BasicShavingTool : MonoBehaviour
     private void OnDestroy()
     {
         if (runtimeRingMaterial != null) Destroy(runtimeRingMaterial);
+    }
+
+    private void OnDisable()
+    {
+        if (visualRing != null) visualRing.enabled = false;
     }
 
     private void SetupVisualRing()

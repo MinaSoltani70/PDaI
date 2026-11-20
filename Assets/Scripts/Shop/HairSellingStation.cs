@@ -37,9 +37,7 @@ public sealed class HairSellingStation : MonoBehaviour
     private void OnDestroy()
     {
         foreach (Material material in createdMaterials)
-        {
             if (material != null) Destroy(material);
-        }
         createdMaterials.Clear();
     }
 
@@ -81,10 +79,7 @@ public sealed class HairSellingStation : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (IsPlayer(other))
-        {
-            playerInRange = true;
-        }
+        if (IsPlayer(other)) playerInRange = true;
     }
 
     private void OnTriggerExit(Collider other)
@@ -114,7 +109,7 @@ public sealed class HairSellingStation : MonoBehaviour
             return;
         }
 
-        long payout = (long)hairUnits * coinsPerHairUnit;
+        long payout = (long)hairUnits * GetCoinsPerHairUnit();
         if (payout > int.MaxValue || economyManager.Coins > int.MaxValue - payout)
         {
             ShowFeedback("The sale would exceed the supported coin balance.");
@@ -137,6 +132,13 @@ public sealed class HairSellingStation : MonoBehaviour
         ShowFeedback($"Sold {hairUnits} hair for {payout} coins.");
     }
 
+    private int GetCoinsPerHairUnit()
+    {
+        float value = coinsPerHairUnit;
+        value = UpgradeManager.Instance.GetStatValue(UpgradeStat.SellPrice, coinsPerHairUnit);
+        return Mathf.Max(1, Mathf.RoundToInt(value));
+    }
+
     private void ShowFeedback(string message)
     {
         feedbackMessage = message;
@@ -149,7 +151,7 @@ public sealed class HairSellingStation : MonoBehaviour
 
         int hairUnits = hairInventory != null ? hairInventory.HairUnits : 0;
         int coins = economyManager != null ? economyManager.Coins : 0;
-        long payout = (long)hairUnits * coinsPerHairUnit;
+        long payout = (long)hairUnits * GetCoinsPerHairUnit();
         string prompt = $"Press {InteractionKeyName} to sell all hair";
         string inventorySummary = hairUnits > 0
             ? $"Inventory: {hairUnits} hair    Sale value: {payout} coins    Balance: {coins} coins"
@@ -254,7 +256,6 @@ public sealed class HairSellingStation : MonoBehaviour
     {
         Shader shader = Shader.Find("HDRP/Lit");
         if (shader == null) shader = Shader.Find("Standard");
-
         if (shader == null) return null;
 
         Material material = new Material(shader)
