@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a7b4b728cf02524a86fcc713f6fefeb, type: 3}
   m_Name: Player Speed
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeDefinition
-  id: 4
+  id: player_speed
   displayName: Movement Speed
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 7fefd9d17cbb84b429a348b17639bb62, type: 3}
   stat: 3
   modifier: 1
   levels:
   - cost: 90
-    value: 1.15
+    value: 1.25
   - cost: 560
-    value: 1.45
+    value: 1.5
   requirements:
   - upgrade: {fileID: 11400000, guid: efed1a3cc5a854c48b8bc21e1a162378, type: 2}
     minLevel: 2

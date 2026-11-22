@@ -6,5 +6,6 @@ public enum UpgradeStat
     ShaveSpeed,
     ShaveRange,
     MoveSpeed,
-    SellPrice
+    SellPrice,
+    BackpackCapacity
 }

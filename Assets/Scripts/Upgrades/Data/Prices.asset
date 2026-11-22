@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a7b4b728cf02524a86fcc713f6fefeb, type: 3}
   m_Name: Prices
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeDefinition
-  id: 6
+  id: better_prices
   displayName: Better Prices
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 875e861e68d3f6a4b865141a8b1c29d4, type: 3}
   stat: 4
   modifier: 0
   levels:
   - cost: 50
     value: 1
   - cost: 400
-    value: 1.5
+    value: 2
   requirements:
   - upgrade: {fileID: 11400000, guid: 46e08edb914d30342a331a880f71816d, type: 2}
     minLevel: 1

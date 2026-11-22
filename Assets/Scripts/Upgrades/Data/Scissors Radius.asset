@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a7b4b728cf02524a86fcc713f6fefeb, type: 3}
   m_Name: Scissors Radius
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeDefinition
-  id: 2
+  id: scissors_radius
   displayName: Scissors Radius
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 6b377e5aa54c65a4eb625fdefd934662, type: 3}
   stat: 0
   modifier: 0
   levels:

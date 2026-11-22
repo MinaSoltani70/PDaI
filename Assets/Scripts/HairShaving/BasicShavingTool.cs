@@ -146,6 +146,14 @@ public class BasicShavingTool : MonoBehaviour
 
     private void PerformShave()
     {
+        FindHairInventory();
+        if (hairInventory != null && hairInventory.IsFull)
+        {
+            harvestFeedback = "Inventory full!";
+            harvestFeedbackExpiryTime = Time.unscaledTime + 1.5f;
+            return;
+        }
+
         if (playerCamera == null)
         {
             playerCamera = Camera.main;

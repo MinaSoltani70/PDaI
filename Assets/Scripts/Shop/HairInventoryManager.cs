@@ -8,10 +8,15 @@ public sealed class HairInventoryManager : MonoBehaviour
     public int HairUnits { get; private set; }
 
     [SerializeField, Min(0f)] private float saveInterval = 2f;
+    [SerializeField, Min(1)] private int capacity = 100;
 
     private SaveManager saveManager;
     private bool saveFilePending;
     private float nextSaveTime;
+
+    public int Capacity => UpgradeManager.Instance != null ? Mathf.Max(1, Mathf.RoundToInt(UpgradeManager.Instance.GetStatValue(UpgradeStat.BackpackCapacity, capacity))) : capacity;
+    public int RemainingCapacity => Mathf.Max(0, Capacity - HairUnits);
+    public bool IsFull => HairUnits >= Capacity;
 
     private void Awake()
     {
@@ -19,7 +24,7 @@ public sealed class HairInventoryManager : MonoBehaviour
         if (saveManager == null)
         {
             HairUnits = 0;
-            Debug.LogError("HairInventoryManager requires a SaveManager on the same GameObject.", this);
+            Debug.LogError("SaveManager must be on the same gameObject.", this);
             return;
         }
 
@@ -48,9 +53,9 @@ public sealed class HairInventoryManager : MonoBehaviour
 
     public bool AddHair(int amount)
     {
-        if (amount <= 0 || amount > int.MaxValue - HairUnits) return false;
+        if (amount <= 0 || IsFull) return false;
 
-        HairUnits += amount;
+        HairUnits += Mathf.Min(amount, RemainingCapacity);
         SaveHair(false);
         HairUnitsChanged?.Invoke(HairUnits);
         return true;
