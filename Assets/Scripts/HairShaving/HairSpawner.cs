@@ -133,57 +133,69 @@ namespace GiantGrass
             Draw(cam);
         }
 
-        public int ShaveNearPoint(Vector3 hitPoint, float radius, float cutAmount)
-        {
-            if (needsSpawn) Spawn();
-            if (bladeCount == 0 || radius <= 0f || cutAmount <= 0f) return 0;
 
-            float r2 = radius * radius;
-            float now = Time.time;
-            int cutNow = 0;
-            Vector3Int min = Cell(hitPoint - Vector3.one * radius);
-            Vector3Int max = Cell(hitPoint + Vector3.one * radius);
+public int ShaveNearPoint(Vector3 hitPoint, float radius, float cutAmount, int maxHairUnits)
+{
+    if (needsSpawn) Spawn();
 
-            for (int x = min.x; x <= max.x; x++)
-                for (int y = min.y; y <= max.y; y++)
-                    for (int z = min.z; z <= max.z; z++)
+    if (bladeCount == 0 || radius <= 0f || cutAmount <= 0f || maxHairUnits <= 0)
+        return 0;
+
+    float r2 = radius * radius;
+    float now = Time.time;
+    int cutNow = 0;
+
+    Vector3Int min = Cell(hitPoint - Vector3.one * radius);
+    Vector3Int max = Cell(hitPoint + Vector3.one * radius);
+
+    for (int x = min.x; x <= max.x && cutNow < maxHairUnits; x++)
+        for (int y = min.y; y <= max.y && cutNow < maxHairUnits; y++)
+            for (int z = min.z; z <= max.z && cutNow < maxHairUnits; z++)
+            {
+                if (!grid.TryGetValue(new Vector3Int(x, y, z), out var list))
+                    continue;
+
+                foreach (var b in list)
+                {
+                    if (cutNow >= maxHairUnits) break;
+
+                    bool changed = false;
+
+                    for (int k = 0; k < b.bladeTotal && cutNow < maxHairUnits; k++)
                     {
-                        if (!grid.TryGetValue(new Vector3Int(x, y, z), out var list)) continue;
+                        int i = b.blades[k];
 
-                        foreach (var b in list)
+                        if (length[i] <= 0f) continue;
+                        if ((worldPos[i] - hitPoint).sqrMagnitude > r2) continue;
+
+                        length[i] -= cutAmount;
+                        lastShaveTime[i] = now;
+
+                        if (length[i] <= minLength)
                         {
-                            bool changed = false;
-                            for (int k = 0; k < b.bladeTotal; k++)
-                            {
-                                int i = b.blades[k];
-                                if (length[i] <= 0f) continue;
-                                if ((worldPos[i] - hitPoint).sqrMagnitude > r2) continue;
-
-                                length[i] -= cutAmount;
-                                lastShaveTime[i] = now;
-                                if (length[i] <= minLength)
-                                {
-                                    length[i] = 0f;
-                                    cutNow++;
-                                }
-                                changed = true;
-                            }
-                            if (changed)
-                            {
-                                b.dirty = true;
-                                if (canRegrow) regrowingBatches.Add(b);
-                            }
+                            length[i] = 0f;
+                            cutNow++;
                         }
+
+                        changed = true;
                     }
 
-            if (cutNow > 0)
-            {
-                CutBladeCount += cutNow;
-                BladesCut?.Invoke(cutNow);
+                    if (changed)
+                    {
+                        b.dirty = true;
+                        if (canRegrow) regrowingBatches.Add(b);
+                    }
+                }
             }
 
-            return cutNow;
-        }
+    if (cutNow > 0)
+    {
+        CutBladeCount += cutNow;
+        BladesCut?.Invoke(cutNow);
+    }
+
+    return cutNow;
+}
 
         [ContextMenu("Regrow All")]
         public void RegrowAll()

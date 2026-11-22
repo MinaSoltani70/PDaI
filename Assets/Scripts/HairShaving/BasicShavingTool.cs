@@ -177,7 +177,7 @@ public class BasicShavingTool : MonoBehaviour
         IShaveable target = hit.collider.GetComponentInParent<IShaveable>();
         if (target != null)
         {
-            AddHarvestedHair(target.ShaveNearPoint(hit.point, shaveRadius, cut));
+            AddHarvestedHair(target.ShaveNearPoint(hit.point, shaveRadius, cut, hairInventory.RemainingCapacity)); 
             return;
         }
 

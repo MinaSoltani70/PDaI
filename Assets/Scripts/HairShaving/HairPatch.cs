@@ -8,18 +8,33 @@ public class HairPatch : MonoBehaviour, IShaveable
 
     public void CacheStrands() => hairStrands = GetComponentsInChildren<HairStrand>(true);
 
-    public int ShaveNearPoint(Vector3 hitPoint, float radius, float cutAmount)
+    
+public int ShaveNearPoint(Vector3 hitPoint, float radius, float cutAmount, int maxHairUnits)
+{
+    if (maxHairUnits <= 0) return 0;
+
+    if (hairStrands == null || hairStrands.Length == 0)
+        CacheStrands();
+
+    if (hairStrands == null) return 0;
+
+    int harvested = 0;
+
+    foreach (var strand in hairStrands)
     {
-        if (hairStrands == null || hairStrands.Length == 0) CacheStrands();
-        if (hairStrands == null) return 0;
+        if (harvested >= maxHairUnits)
+            break;
 
-        int harvested = 0;
-        foreach (var strand in hairStrands)
+        if (strand == null || !strand.gameObject.activeSelf)
+            continue;
+
+        if (Vector3.Distance(strand.RootPosition, hitPoint) <= radius)
         {
-            if (strand == null || !strand.gameObject.activeSelf) continue;
-            if (Vector3.Distance(strand.RootPosition, hitPoint) <= radius && strand.Shave(cutAmount)) harvested++;
+            if (strand.Shave(cutAmount))
+                harvested++;
         }
-
-        return harvested;
     }
+
+    return harvested;
+}
 }
