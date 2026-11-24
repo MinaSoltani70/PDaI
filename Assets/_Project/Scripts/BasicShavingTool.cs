@@ -4,14 +4,18 @@ public class BasicShavingTool : MonoBehaviour
 {
     [Header("Raycast Settings")]
     [SerializeField] private Camera playerCamera;
-    [SerializeField] private float shaveRange = 5.0f;       // Maximum distance of the shaving tool.
-    [SerializeField] private float toolHeadRadius = 0.35f;  // Radius of the shaving tool head for sphere casts.
-    [SerializeField] private float shaveRadius = 0.6f;      // Radius shaved around the contact point.
-    [SerializeField] private float shaveSpeed = 1.2f;       // Speed at which hair is shaved.
+    [SerializeField] private float shaveRange = 5.0f;       // max range shaver
+    [SerializeField] private float shaveRadius = 0.6f;      // areas
     [SerializeField] private LayerMask shavableLayer = ~0;
 
+    [Header("Speed Upgrade Settings (#20)")]
+    [SerializeField] private float baseShaveSpeed = 1.2f;       // lv 1 speed
+    [SerializeField] private float speedIncreasePerLevel = 0.6f; 
+    [SerializeField] private int currentSpeedLevel = 1;         
+    [SerializeField] private int maxSpeedLevel = 5;             // max lv
+
     [Header("Crosshair UI")]
-    [SerializeField] private bool showCrosshair = true;
+    [SerializeField] private bool showCrosshair = false; 
     [SerializeField] private Color crosshairColor = Color.white;
 
     [Header("Cutting Area Visual Ring")]
@@ -23,8 +27,13 @@ public class BasicShavingTool : MonoBehaviour
 
     private HairInventoryManager hairInventory;
     private bool missingInventoryLogged;
-    private string harvestFeedback;
-    private float harvestFeedbackExpiryTime;
+    private string feedbackText;
+    private float feedbackExpiryTime;
+
+    // read recent speed (gameplay & shop)
+    public float CurrentShaveSpeed => baseShaveSpeed + ((currentSpeedLevel - 1) * speedIncreasePerLevel);
+    public int CurrentSpeedLevel => currentSpeedLevel;
+    public int MaxSpeedLevel => maxSpeedLevel;
 
     private void Start()
     {
@@ -34,7 +43,6 @@ public class BasicShavingTool : MonoBehaviour
         }
 
         FindHairInventory();
-
         SetupVisualRing();
     }
 
@@ -42,7 +50,6 @@ public class BasicShavingTool : MonoBehaviour
     {
         if (visualRing == null)
         {
-            // Create a child GameObject automatically when none is assigned in the Inspector.
             GameObject ringObj = new GameObject("CuttingVisualRing");
             ringObj.transform.SetParent(transform);
             visualRing = ringObj.AddComponent<LineRenderer>();
@@ -57,7 +64,6 @@ public class BasicShavingTool : MonoBehaviour
         visualRing.receiveShadows = false;
         visualRing.alignment = LineAlignment.View;
 
-        // Use an HDRP Unlit material when one is available.
         if (visualRing.sharedMaterial == null || visualRing.sharedMaterial.name == "Default-Line")
         {
             Material mat = Resources.Load<Material>("CuttingRingMat");
@@ -70,8 +76,6 @@ public class BasicShavingTool : MonoBehaviour
                 {
                     mat = new Material(s);
                     if (mat.HasProperty("_UnlitColor")) mat.SetColor("_UnlitColor", Color.white);
-                    if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
-                    if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", Color.white);
                 }
             }
             if (mat != null) visualRing.material = mat;
@@ -82,6 +86,12 @@ public class BasicShavingTool : MonoBehaviour
 
     private void Update()
     {
+        // pres u for more speed
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            UpgradeShavingSpeed();
+        }
+
         bool isClicking = false;
 
         #if ENABLE_INPUT_SYSTEM
@@ -114,8 +124,6 @@ public class BasicShavingTool : MonoBehaviour
         if (Physics.Raycast(ray, out hit, shaveRange, shavableLayer))
         {
             visualRing.enabled = true;
-
-            // Show white while aiming and green while shaving.
             Color activeColor = isCutting ? ringCuttingColor : ringIdleColor;
             visualRing.startColor = activeColor;
             visualRing.endColor = activeColor;
@@ -124,17 +132,13 @@ public class BasicShavingTool : MonoBehaviour
         }
         else
         {
-            // Hide the ring when no surface is within range.
             visualRing.enabled = false;
         }
     }
 
     private void DrawCircleOnSurface(Vector3 center, Vector3 normal, float radius)
     {
-        // Offset the ring slightly along the surface normal to avoid z-fighting.
         Vector3 surfaceCenter = center + normal * 0.008f;
-
-        // Calculate an orthogonal tangent and bitangent on the surface plane.
         Vector3 helper = Mathf.Abs(normal.y) > 0.99f ? Vector3.forward : Vector3.up;
         Vector3 tangent = Vector3.Cross(normal, helper).normalized;
         Vector3 bitangent = Vector3.Cross(normal, tangent).normalized;
@@ -152,6 +156,7 @@ public class BasicShavingTool : MonoBehaviour
         }
     }
 
+    // accuration shaver Function using upgrading speed
     private void PerformShave()
     {
         if (playerCamera == null)
@@ -163,28 +168,49 @@ public class BasicShavingTool : MonoBehaviour
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         RaycastHit hit;
 
-        bool hasHit = Physics.SphereCast(ray, toolHeadRadius, out hit, shaveRange, shavableLayer);
-        if (!hasHit)
+        if (Physics.Raycast(ray, out hit, shaveRange, shavableLayer))
         {
-            hasHit = Physics.Raycast(ray, out hit, shaveRange, shavableLayer);
-        }
+            Collider[] collidersInRange = Physics.OverlapSphere(hit.point, shaveRadius, shavableLayer);
+            int totalHarvested = 0;
+            float currentSpeed = CurrentShaveSpeed; // recent upgrade speed 
 
-        if (hasHit)
-        {
-            HairPatch patch = hit.collider.GetComponentInParent<HairPatch>();
-            if (patch != null)
+            foreach (var col in collidersInRange)
             {
-                AddHarvestedHair(patch.ShaveNearPoint(hit.point, shaveRadius, shaveSpeed * Time.deltaTime));
-            }
-            else
-            {
-                HairStrand strand = hit.collider.GetComponent<HairStrand>();
-                if (strand != null && strand.Shave(shaveSpeed * Time.deltaTime))
+                HairStrand strand = col.GetComponent<HairStrand>();
+                if (strand != null && !strand.IsShaved())
                 {
-                    AddHarvestedHair(1);
+                    if (strand.Shave(currentSpeed * Time.deltaTime))
+                    {
+                        totalHarvested++;
+                    }
                 }
             }
+
+            if (totalHarvested > 0)
+            {
+                AddHarvestedHair(totalHarvested);
+            }
         }
+    }
+
+    // public function to lv up speed (from Shop)
+    public bool UpgradeShavingSpeed()
+    {
+        if (currentSpeedLevel >= maxSpeedLevel)
+        {
+            ShowFeedback($"Speed Maxed! (Lv.{currentSpeedLevel})");
+            return false;
+        }
+
+        currentSpeedLevel++;
+        ShowFeedback($"Shaving Speed Upgraded! Lv.{currentSpeedLevel} ({CurrentShaveSpeed:F1}x)");
+        return true;
+    }
+
+    // speed function (ex: load data game)
+    public void SetSpeedLevel(int level)
+    {
+        currentSpeedLevel = Mathf.Clamp(level, 1, maxSpeedLevel);
     }
 
     private void FindHairInventory()
@@ -197,10 +223,7 @@ public class BasicShavingTool : MonoBehaviour
 
     private void AddHarvestedHair(int amount)
     {
-        if (amount <= 0)
-        {
-            return;
-        }
+        if (amount <= 0) return;
 
         FindHairInventory();
         if (hairInventory == null)
@@ -210,7 +233,6 @@ public class BasicShavingTool : MonoBehaviour
                 Debug.LogError("Cannot collect harvested hair because no HairInventoryManager exists in the scene.", this);
                 missingInventoryLogged = true;
             }
-
             return;
         }
 
@@ -220,34 +242,34 @@ public class BasicShavingTool : MonoBehaviour
             return;
         }
 
-        harvestFeedback = amount == 1 ? "+1 Hair" : $"+{amount} Hair";
-        harvestFeedbackExpiryTime = Time.unscaledTime + 1.5f;
+        ShowFeedback(amount == 1 ? "+1 Hair" : $"+{amount} Hair");
+    }
+
+    private void ShowFeedback(string message)
+    {
+        feedbackText = message;
+        feedbackExpiryTime = Time.unscaledTime + 1.8f;
     }
 
     private void OnGUI()
     {
-        if (!showCrosshair) return;
-
-        float dotSize = 6f;
-        float x = (Screen.width - dotSize) * 0.5f;
-        float y = (Screen.height - dotSize) * 0.5f;
-
-        Color prevColor = GUI.color;
-        GUI.color = crosshairColor;
-        GUI.Box(new Rect(x, y, dotSize, dotSize), GUIContent.none);
-        GUI.color = prevColor;
-
-        if (!string.IsNullOrEmpty(harvestFeedback) && Time.unscaledTime < harvestFeedbackExpiryTime)
+        // pop up notification
+        if (!string.IsNullOrEmpty(feedbackText) && Time.unscaledTime < feedbackExpiryTime)
         {
             GUIStyle feedbackStyle = new GUIStyle(GUI.skin.label)
             {
                 alignment = TextAnchor.MiddleCenter,
-                fontSize = 24,
+                fontSize = 22,
                 fontStyle = FontStyle.Bold,
-                normal = { textColor = Color.white }
+                normal = { textColor = Color.yellow }
             };
 
-            GUI.Label(new Rect((Screen.width - 220f) * 0.5f, y + 24f, 220f, 36f), harvestFeedback, feedbackStyle);
+            float panelWidth = 400f;
+            float panelHeight = 40f;
+            float x = (Screen.width - panelWidth) * 0.5f;
+            float y = Screen.height * 0.5f + 40f;
+
+            GUI.Label(new Rect(x, y, panelWidth, panelHeight), feedbackText, feedbackStyle);
         }
     }
 }
