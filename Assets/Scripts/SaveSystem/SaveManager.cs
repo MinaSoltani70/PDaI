@@ -4,10 +4,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-/// <summary>
-/// Loads and saves the shared game data file. Gameplay systems own their rules
-/// and update only their fields on CurrentSave before requesting a save.
-/// </summary>
 [DefaultExecutionOrder(-100)]
 public sealed class SaveManager : MonoBehaviour
 {
@@ -37,14 +33,8 @@ public sealed class SaveManager : MonoBehaviour
 
     private string SavePath => Path.Combine(Application.persistentDataPath, SaveFileName);
 
-    private void Awake()
-    {
-        InitializeIfNeeded();
-    }
+    private void Awake() => InitializeIfNeeded();
 
-    /// <summary>
-    /// Writes the current shared save data to the persistent JSON file.
-    /// </summary>
     public void Save()
     {
         InitializeIfNeeded();
@@ -58,14 +48,8 @@ public sealed class SaveManager : MonoBehaviour
             string json = JsonUtility.ToJson(currentSave, true);
             File.WriteAllText(temporaryPath, json);
 
-            if (File.Exists(SavePath))
-            {
-                File.Replace(temporaryPath, SavePath, null);
-            }
-            else
-            {
-                File.Move(temporaryPath, SavePath);
-            }
+            if (File.Exists(SavePath)) File.Replace(temporaryPath, SavePath, null);
+            else File.Move(temporaryPath, SavePath);
         }
         catch (Exception exception) when (exception is IOException ||
                                           exception is UnauthorizedAccessException ||
@@ -78,18 +62,12 @@ public sealed class SaveManager : MonoBehaviour
 
     private void InitializeIfNeeded()
     {
-        if (isInitialized)
-        {
-            return;
-        }
+        if (isInitialized) return;
 
         isInitialized = true;
         currentSave = new GameSaveData();
 
-        if (File.Exists(SavePath))
-        {
-            TryLoad(SavePath, out currentSave);
-        }
+        if (File.Exists(SavePath)) TryLoad(SavePath, out currentSave);
     }
 
     private bool TryLoad(string path, out GameSaveData data)
