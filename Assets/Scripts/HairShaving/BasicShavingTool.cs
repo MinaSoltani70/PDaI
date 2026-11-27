@@ -10,8 +10,14 @@ public class BasicShavingTool : MonoBehaviour
     [SerializeField] private float shaveSpeed = 1.2f;
     [SerializeField] private LayerMask shavableLayer = ~0;
 
+    [Header("Speed Upgrade Settings (#20)")]
+    [SerializeField] private float baseShaveSpeed = 1.2f;       // lv 1 speed
+    [SerializeField] private float speedIncreasePerLevel = 0.6f; 
+    [SerializeField] private int currentSpeedLevel = 1;         
+    [SerializeField] private int maxSpeedLevel = 5;             // max lv
+
     [Header("Crosshair UI")]
-    [SerializeField] private bool showCrosshair = true;
+    [SerializeField] private bool showCrosshair = false; 
     [SerializeField] private Color crosshairColor = Color.white;
 
     [Header("Cutting Area Visual Ring")]
@@ -24,8 +30,13 @@ public class BasicShavingTool : MonoBehaviour
     private Material runtimeRingMaterial;
     private HairInventoryManager hairInventory;
     private bool missingInventoryLogged;
-    private string harvestFeedback;
-    private float harvestFeedbackExpiryTime;
+    private string feedbackText;
+    private float feedbackExpiryTime;
+
+    // Properties for speed upgrade & external systems
+    public float CurrentShaveSpeed => baseShaveSpeed + ((currentSpeedLevel - 1) * speedIncreasePerLevel);
+    public int CurrentSpeedLevel => currentSpeedLevel;
+    public int MaxSpeedLevel => maxSpeedLevel;
 
     public float ShaveRadius { get => shaveRadius; set => shaveRadius = Mathf.Max(0.01f, value); }
     public float ShaveSpeed { get => shaveSpeed; set => shaveSpeed = Mathf.Max(0f, value); }
@@ -33,6 +44,7 @@ public class BasicShavingTool : MonoBehaviour
 
     private void Start()
     {
+        shaveSpeed = CurrentShaveSpeed;
         if (playerCamera == null) playerCamera = Camera.main;
         FindHairInventory();
         SetupVisualRing();
@@ -91,6 +103,12 @@ public class BasicShavingTool : MonoBehaviour
 
     private void Update()
     {
+        // Shortcut uji coba speed upgrade (#20)
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            UpgradeShavingSpeed();
+        }
+
         bool isClicking = IsShaveButtonHeld();
         UpdateVisualRing(isClicking);
         if (isClicking) PerformShave();
@@ -123,7 +141,10 @@ public class BasicShavingTool : MonoBehaviour
 
             DrawCircleOnSurface(hit.point, hit.normal, shaveRadius);
         }
-        else visualRing.enabled = false;
+        else
+        {
+            visualRing.enabled = false;
+        }
     }
 
     private void DrawCircleOnSurface(Vector3 center, Vector3 normal, float radius)
@@ -153,12 +174,13 @@ public class BasicShavingTool : MonoBehaviour
             return;
         }
 
+        // Integrasi inventory: batalkan jika penuh
         if (hairInventory.IsFull)
         {
-            harvestFeedback = "Inventory full!";
-            harvestFeedbackExpiryTime = Time.unscaledTime + 1.5f;
+            ShowFeedback("Inventory full!");
             return;
         }
+
         if (playerCamera == null)
         {
             playerCamera = Camera.main;
@@ -172,6 +194,7 @@ public class BasicShavingTool : MonoBehaviour
         if (!hasHit) hasHit = Physics.Raycast(ray, out hit, shaveRange, shavableLayer, QueryTriggerInteraction.Ignore);
         if (!hasHit) return;
 
+        // Menggunakan shaveSpeed hasil upgrade (#20) dan sistem upgrade tim
         float cut = shaveSpeed * Time.deltaTime;
 
         IShaveable target = hit.collider.GetComponentInParent<IShaveable>();
@@ -182,7 +205,31 @@ public class BasicShavingTool : MonoBehaviour
         }
 
         HairStrand strand = hit.collider.GetComponent<HairStrand>();
-        if (strand != null && strand.Shave(cut)) AddHarvestedHair(1);
+        if (strand != null && strand.Shave(cut))
+        {
+            AddHarvestedHair(1);
+        }
+    }
+
+    // Public method untuk menaikkan speed (dipanggil dari Shop UI atau tombol U)
+    public bool UpgradeShavingSpeed()
+    {
+        if (currentSpeedLevel >= maxSpeedLevel)
+        {
+            ShowFeedback($"Speed Maxed! (Lv.{currentSpeedLevel})");
+            return false;
+        }
+
+        currentSpeedLevel++;
+        shaveSpeed = CurrentShaveSpeed;
+        ShowFeedback($"Shaving Speed Upgraded! Lv.{currentSpeedLevel} ({CurrentShaveSpeed:F1}x)");
+        return true;
+    }
+
+    public void SetSpeedLevel(int level)
+    {
+        currentSpeedLevel = Mathf.Clamp(level, 1, maxSpeedLevel);
+        shaveSpeed = CurrentShaveSpeed;
     }
 
     private void FindHairInventory()
@@ -214,34 +261,33 @@ public class BasicShavingTool : MonoBehaviour
             return;
         }
 
-        harvestFeedback = amount == 1 ? "+1 Hair" : $"+{amount} Hair";
-        harvestFeedbackExpiryTime = Time.unscaledTime + 1.5f;
+        ShowFeedback(amount == 1 ? "+1 Hair" : $"+{amount} Hair");
+    }
+
+    private void ShowFeedback(string message)
+    {
+        feedbackText = message;
+        feedbackExpiryTime = Time.unscaledTime + 1.8f;
     }
 
     private void OnGUI()
     {
-        if (!showCrosshair) return;
-
-        float dotSize = 6f;
-        float x = (Screen.width - dotSize) * 0.5f;
-        float y = (Screen.height - dotSize) * 0.5f;
-
-        Color prevColor = GUI.color;
-        GUI.color = crosshairColor;
-        GUI.Box(new Rect(x, y, dotSize, dotSize), GUIContent.none);
-        GUI.color = prevColor;
-
-        if (!string.IsNullOrEmpty(harvestFeedback) && Time.unscaledTime < harvestFeedbackExpiryTime)
+        if (!string.IsNullOrEmpty(feedbackText) && Time.unscaledTime < feedbackExpiryTime)
         {
             GUIStyle feedbackStyle = new GUIStyle(GUI.skin.label)
             {
                 alignment = TextAnchor.MiddleCenter,
-                fontSize = 24,
+                fontSize = 22,
                 fontStyle = FontStyle.Bold,
-                normal = { textColor = Color.white }
+                normal = { textColor = Color.yellow }
             };
 
-            GUI.Label(new Rect((Screen.width - 220f) * 0.5f, y + 24f, 220f, 36f), harvestFeedback, feedbackStyle);
+            float panelWidth = 400f;
+            float panelHeight = 40f;
+            float x = (Screen.width - panelWidth) * 0.5f;
+            float y = Screen.height * 0.5f + 40f;
+
+            GUI.Label(new Rect(x, y, panelWidth, panelHeight), feedbackText, feedbackStyle);
         }
     }
 }
